@@ -1,0 +1,96 @@
+1. Sintaxis. Para cada expresi´on se pide:
+• Colocar los par´entesis omitidos de modo tal de no cambiar su significado
+• Indicar qu´e clase de expresi´on es (aplicaci´on o abstracci´on)
+• Indicar cu´ales ocurrencias de las variables est´an libres y cu´ales ligadas
+
+\x -> x    	ABSTRACCIóN
+			x ligada
+
+
+(\z -> z+z)	ABSTRACCIóN
+			las dos z están ligadas
+
+(\z -> z) z	APLICACIóN
+			la primera z está ligada y la segunda z libre
+
+
+(\x -> x) (\y -> x)  APLICACIóN
+					 la primera x está ligada y la segunda x libre
+					 es un redex (\x -> x) (\y -> x) ->β \y -> x
+
+
+(\f -> f (\y -> x))	ABSTRACCIóN
+					f ligada y x libre
+
+(\g -> g (\f -> f x))	ABSTRACCIóN
+						g ligada, f ligada, x libre
+						
+
+
+((\x -> (\y -> x)) (\z -> z)) x		APLICACIóN
+									primera x ligada, z ligada, segunda x libre
+									
+
+((\x -> (\y -> x)) (\z -> z)) x	->β  (\y -> (\z->z) ) x
+								
+								->β  \z -> z 
+
+2. Sustituciones. Para cada expresi´on se pide realizar la sustituci´on correspondiente
+
+(1) x [x := 5] = 5
+(2) z [x := 5] = z
+(3) (λx → x + z) [z := 3] = λx → x + 3
+(4) (λx → x + z) [x := 2] = λx → x + z
+(5) (λx → x ∗ z) [z := y+1] = λx → x ∗ (y+1)
+(6) (λx → z ∗ x) [z := f x] =a (λy → z ∗ y) [z := f x] = λy → (f x) ∗ y
+(7) (λf → f z) [z := f x] =a (λw → w z) [z := f x] = λw → w (f x)
+(8) (λx → x) (λy → y ∗ x) [x := z+z] = (λx → x)(λy → y ∗ (z+z))
+(9) (λx → x) (λy → y ∗ x) [x := y+y] = (λx → x) (λw → w ∗ (y+y)) 
+(10) (λx → λy → x z z) [z := x] = λw → λy → w x x
+(11) ((y λx → λy → f y) (λf → f y z)) [y := f x] = (((f x) λx → λy → f y) (λg → g (f x) z))
+
+
+
+3. Reducción a Forma Normal.
+Para cada expresi´on se pide aplicar la reducci´on β hasta eliminar todos los redexes:
+
+(1) (λx → x − z) 5 ->β 5 - z
+
+(2) ((λx → (λz→ x − z))v)w  ->β
+
+
+
+ ((λx → λz→ x − z)  v)   w   ->β  (\z -> v - z) w   ->β  v - w
+ 
+ 
+(λx → λz → x − z)  v   w   ->βx2  v - w
+
+
+
+
+(3) (λx → λy→ λz→ x + y − z ∗ z) 1 2 3  ->βx3  1 + 2 - 3* 3
+
+
+(4) (λf → f z) (λy → y) ->β  (λy → y) z  ->β  z 
+
+
+
+(5) (λx → λy → x) 5  ->β  λy → 5
+
+(6) (λx → λy → y) 5  ->β λy → y
+
+(7) ((λx → λy → x) (λz → z)) x  ->β     (λy→(λz → z)) x ->β λz → z 
+
+(8) (λx → x x) (λx → x x)   ->β   (λx → x x)(λx → x x)  ->β   (λx → x x)(λx → x x)
+->β   (λx → x x)(λx → x x)->β   (λx → x x)(λx → x x)->β   (λx → x x)(λx → x x)->β   (λx → x x)(λx → x x)->β   (λx → x x)(λx → x x)->β   (λx → x x)(λx → x x)->β   (λx → x x)(λx → x x)->β   (λx → x x)(λx → x x)->β   (λx → x x)(λx → x x)->β   (λx → x x)(λx → x x)->β   (λx → x x)(λx → x x)->β   (λx → x x)(λx → x x)
+NO tiene forma normal
+
+
+
+
+(9) (λx → x x x) (λx → x x x)  ->β (λx → x x x)(λx → x x x)(λx → x x x)
+							->β (λx → x x x)(λx → x x x)(λx → x x x)(λx → x x x)
+							->β (λx → x x x)(λx → x x x)(λx → x x x)(λx → x x x)(λx → x x x)
+no tiene forma normal
+
+
