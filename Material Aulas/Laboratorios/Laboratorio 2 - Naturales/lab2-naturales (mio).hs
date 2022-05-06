@@ -31,5 +31,23 @@ predecesor :: N -> N
 predecesor = \n -> case n of {O -> O ; S x -> x}
 
 -- Clases en HASKEL
-instance Eq
+instance Eq N where
+    (==) = \m n -> case m of {
+        O -> case n of {
+            O -> True;
+            _ -> False;
+        }
+        S x -> case n of {
+            O -> False;
+            S y -> x == y;
+        }
+    }
 
+instance Ord N where
+    (<=) = \m n -> case m of {
+        O -> True;
+        S x -> case n of {
+            O -> False;
+            S y -> ;
+        }
+    }
