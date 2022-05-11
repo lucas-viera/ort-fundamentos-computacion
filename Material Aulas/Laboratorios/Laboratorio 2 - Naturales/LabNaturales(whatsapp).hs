@@ -20,10 +20,11 @@ instance Num N where
 	(*) = \m n -> case m of {O -> O; S x -> n + (x * n)}
 	(-) = \m n -> case m of {O -> O ; S x -> case n of {O -> S x; S y -> x - y}}
 
-
+--3) funcion potencia
 (%)::N -> N -> N
 (%) = \m n -> case n of {O -> uno ; S x -> m * (m%x)}
 
+--4) funcion doble
 doble :: N -> N
 doble = (* dos)
 			
@@ -47,16 +48,23 @@ sumfacts = \ n -> case n of {O -> uno  ; S x -> fact (S x) + sumfacts x }
 sumfi :: (N->N) -> N -> N
 sumfi = \f n -> case n of {O -> f O ; S x -> f (S x) + sumfi f x}
 
+--10)
 
-
+--11) suma pares
 sumpares :: N -> N
 sumpares = \ n -> case n of {O -> O ; S x -> case par (S x) of {True -> S x + sumpares x;
 																False -> sumpares x}}
 
-
+--12) suma impares
 sumimpares :: N -> N
 sumimpares = \ n -> case n of {O -> O ; S x -> case par (S x) of {False -> S x + sumimpares x;
 																  True -> sumimpares x}}
+
+--13) sumpi
+
+--14) reescribir suma pares y suma impares con sumpi
+
+--15) suma cuadrados impares menores: sumacuadimp
 
 -- Para las pruebas
 
@@ -83,8 +91,3 @@ impar = \n -> not (par n)
 
 positivo :: N -> Bool
 positivo = \n -> case n of {O -> False ; S x -> True}
-	
-
-
-
-
