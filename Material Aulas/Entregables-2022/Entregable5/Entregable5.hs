@@ -1,32 +1,43 @@
 {-# OPTIONS_GHC -fno-warn-tabs #-}
 
 module Entregable5 where
-
+import Prelude hiding (pert)
 type Conj a = [a]
 
 -- Ej 1
 pert :: Eq a => a -> Conj a -> Bool
-pert = undefined
-
+pert = \elem con -> case con of {[] -> False; 
+                                 x:xs -> case x==elem of {True -> True;
+                                                          False ->pert elem xs}}
 -- Ej 2						
 esConj :: Eq a => [a] -> Bool
-esConj = undefined
+esConj = \lis -> case lis of {[] -> True;
+                              x:xs -> case pert x xs of {True -> False;
+                                                         False -> esConj xs}}
 
 -- Ej 3				
 inter :: Eq a => Conj a -> Conj a -> Conj a
-inter = undefined
+inter = \c1 c2 -> case c1 of {[] -> [];
+                              x:xs -> case c2 of {[] -> [];
+                                                  y:ys -> case pert x c2 of {True -> x:inter xs c2;
+                                                                             False -> inter xs c2}}}
 
 -- Ej 4
 union :: Eq a => Conj a -> Conj a -> Conj a
-union = undefined
+union = \c1 c2 -> case c1 of {[] -> c2;
+                              x:xs -> case c2 of {[] -> c1;
+                                                  y:ys -> case pert x c2 of {False -> x:c2;
+                                                                             True -> union xs c2}}}
 
 -- Ej 5
 incl :: Eq a => Conj a -> Conj a -> Bool
-incl = undefined
+incl = \c1 c2 -> case c1 of {[] -> True;
+                             x:xs -> case pert x c2 of {True -> incl xs c2;
+                                                        False -> False}}
 
 -- Ej 6
 iguales :: Eq a => Conj a -> Conj a -> Bool
-iguales = undefined
+iguales = \c1 c2 ->  incl c1 c2 && incl c2 c1
 
 
 -- Para las pruebas
@@ -44,4 +55,4 @@ vocales :: Conj Char
 vocales = "aeiou"
 
 abc :: Conj Char
-abc = "fedcba"
+abc = "ioufedcba"
