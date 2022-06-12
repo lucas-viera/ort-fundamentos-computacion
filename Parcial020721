@@ -1,0 +1,49 @@
+fun = \m n l -> case n of {0 -> m;
+						S x -> case l of {[] -> m + n ;
+										z:zs -> case z of {True -> S (x + m);
+														 False -> S (fun m x zs)}}}
+
+(∀m::N)(∀n::N)(∀l::[Bool]) fun m n l = n + m
+Dem: Por inducción en n::N
+Caso n = 0: (∀m::N)(∀l::[Bool]) fun m 0 l =? 0 + m
+	Sean m::N, l::[Bool]
+	fun m 0 l		|  	0 + m
+	= (def. fun)	|	= (def +)
+	m				|	m
+
+
+Caso n = S x, con x::N cualquiera
+HI) (∀m::N)(∀l::[Bool]) fun m x l = x + m
+TI) (∀m::N)(∀l::[Bool]) fun m (S x) l =? S x + m
+	Dem. por inducción en l::[Bool]
+	Caso l = []:  (∀m::N) fun m (S x) [] =? S x + m
+	Sea m::N
+	fun m (S x) [] 	|	S x + m
+	= (def fun)
+	m + S x
+	son iguales por conmutatividad de +
+	
+	
+	Caso l = z:zs, con z::Bool, zs::[Bool]
+	HI2) (∀m::N) fun m (S x) zs = S x + m
+	TI2) (∀m::N) fun m (S x) (z:zs) =? S x + m
+	Sea m::N cualquiera. Por casos en z::Bool
+		Caso z = True: fun m (S x) (True:zs) =? S x + m
+			 fun m (S x) (True:zs)	|	S x + m
+			 = (def. fun)			|	= (def. +)
+			 S (x + m)				|   S (x + m)
+								= x RME
+		Caso z = False: fun m (S x) (False:zs) =? S x + m
+			fun m (S x) (False:zs)	|	S x + m
+			= (def. fun)			|	= (def. +)
+			S (fun m x zs)			|   S (x + m)
+			= (HI para m=m y l=zs)
+			S (x + m)
+								= x RME
+
+		
+fun = \m n l -> case n of {0 -> m;
+						S x -> case l of {[] -> m + n ;
+										z:zs -> case z of {True -> S (x + m);
+														 False -> S (fun m x zs)}}}
+	
