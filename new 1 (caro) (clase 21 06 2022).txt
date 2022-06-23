@@ -1,0 +1,144 @@
+data T a where { H :: T a ;
+				 U :: a -> T a -> T a ;
+				 B :: a -> T a -> T a -> T a }
+bs :: T a -> N
+bs = \t -> case t of {H -> 0 ; 
+					  U x t1 -> bs t1 ; 
+					  B y t1 t2 -> S(bs t1 + bs t2)}
+aBin :: T a -> T a
+aBin = \t -> case t of {H -> H ; 
+						U x t1 -> B x(aBin t1)(aBin t1); 
+						B y t1 t2 -> B y(aBin t1)(aBin t2)}
+
+Demuestre que (∀t::T a) bs t ≤ bs(aBin t)
+Dem. Por inducción en t:: T a
+Caso t = H (caso base): bs H ≤? bs(aBin H)
+	bs H 
+	= (def bs)
+	0	
+	≤ (L1)
+	bs(aBin H)
+
+Caso t = U x t1, con x:: a y t1:: T a cualesquiera 
+(caso inductivo: 1 sola hipótesis para t1)
+HI) bs t1 ≤ bs(aBin t1)
+TI) bs (U x t1) ≤? bs(aBin (U x t1))
+	bs (U x t1) 
+	= (def bs)
+	bs t1
+	≤ (HI)
+	bs(aBin t1)					-- m
+	≤ (L4)
+	bs(aBin t1) + bs(aBin t1)
+	≤ (L3)
+	S(bs(aBin t1)+bs(aBin t1))  -- S(m+m)
+	= (def bs)
+	bs (B x(aBin t1)(aBin t1))
+	= (def. aBin)
+	bs(aBin (U x t1))
+	Acá usamos L7 (transitividad de ≤)
+
+Caso t = B y t1 t2, con y::a y t1,t2::T a cualesquiera
+(caso inductivo con hipótesis para t1 y t2)
+HI1) bs t1 ≤ bs(aBin t1)
+HI2) bs t2 ≤ bs(aBin t2)
+TI) bs(B y t1 t2) ≤? bs(aBin (B y t1 t2))
+	bs(B y t1 t2) 
+	= (def. bs)
+	S(bs t1 + bs t2)
+	
+	≤ (L5 con (L6 con HI1 y HI2)) -- por L6 con HI1 y HI2 sabemos que 
+										bs t1 + bs t2 ≤ bs(aBin t1)+bs(aBin t2)
+								  -- Luego, por L5 tenemos que
+										S(bs t1 + bs t2) ≤ S(bs(aBin t1)+bs(aBin t2))
+	
+	S(bs(aBin t1)+bs(aBin t2))
+	= (def bs)
+	bs(B y (aBin t1)(aBin t2))
+	= (def aBin)
+	bs(aBin (B y t1 t2))
+
+
+
+---------------------------------
+L1. (∀n::N) 0 ≤ n
+L2. (∀n::N) n ≤ n
+L3. (∀n::N) n ≤ S n
+L4. (∀m,n::N) m ≤ m + n
+L5. (∀n,m::N) n ≤ m ⇒ S n ≤ S m
+L6. (∀m1,n1,m2,n2::N) m1 ≤ n1 y m2 ≤ n2 ⇒ m1 + m2 ≤ n1 + n2
+L7. Transitividad de ≤.
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------
+
+
+
+data T a b where {  J :: a -> T a b ;
+					K :: b -> T a b ;
+					N :: T a b -> T a b -> T a b ;
+					P :: T a b -> T a b }
+
+numH :: T a b -> N
+numH = \t -> case t of {J x -> S 0;
+						 K y -> S 0;
+						 N t1 t2 -> numH t1 + numH t2;
+						 P t1 -> numH t1}
+
+numN :: T a b -> N
+numN = \t -> case t of { J x -> 0;
+						 K y -> 0;
+						 N t1 t2 -> S(numN t1 + numN t2);
+						 P t1 -> numN t1}
+
+(∀t::T a b) numH t = S(numN t)
+Dem. Por inducción en t:: T a b
+Caso t = J x, con x::a cualquiera (caso base 1)
+numH (J x) =? S(numN (J x))
+	
+
+
+Caso t = K y, con y::b... (caso base 2)
+análogo
+
+
+
+Caso t = N t1 t2, con T1, t2:: T a b cualesquiera
+HI1) numH t1 = S(numN t1)
+HI2) numH t2 = S(numN t2)
+TI) numH (N t1 t2) = S(numN (N t1 t2))
+.....
+
+Caso t = P t1, con t1....
+HI)numH t1 = S(numN t1)
+TI) numH (P t1) = S(numN (P t1))
+.........
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
