@@ -5,12 +5,8 @@ module FS where
 
 import Prelude
 
--- Nombre: Estudiante 1
--- Número: Estudiante 1
-
--- Nombre: Estudiante 2
--- Número: Estudiante 2
-
+-- Nombre: Lucas Viera
+-- Número: 177863
 
 type Nombre = String 
 
