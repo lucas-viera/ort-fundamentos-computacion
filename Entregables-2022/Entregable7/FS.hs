@@ -11,13 +11,19 @@ import Prelude
 type Nombre = String 
 
 data Ext where { Txt::Ext ; Mp3::Ext ; Jar::Ext ; Doc::Ext ; Hs::Ext }
-  deriving (Eq, Show)
+  deriving (Eq)
 
+instance Show Ext where 
+	show = \ex -> case ex of{ Txt-> "txt" ; 
+					     	 Mp3-> "mp3" ; 
+						     Jar-> "jar" ; 
+						     Doc-> "doc" ; 
+						     Hs-> "hs"}
 
 data FS where {  A :: (Nombre,Ext) -> FS;
                  C :: Nombre -> [FS] -> FS }
   deriving (Eq, Show)
-	
+
 ----
 -- 1
 cjazz :: FS 
@@ -33,25 +39,37 @@ cmusica = C "musica" [cjazz, crock, A ("clara", Mp3)]
 -- Completar el resto de los componentes del FS
 
 cort :: FS
-cort = undefined
+cort = C "ort" [cobls, A ("notas", Txt)] 
 
 cobls :: FS
-cobls = undefined
+cobls = C "obls" [A ("p2", Txt), A ("p2", Jar), A ("fc", Hs)]
 
 csys :: FS
-csys = undefined
+csys = C "sys" [A ("sys", Txt), C "sys" []]
+
+csysvacio :: FS
+csysvacio = C "sys" []
 
 craiz :: FS
-craiz = undefined
+craiz = C "raiz" [cmusica, A ("notas", Txt), cort, csys]
 
 ----
 -- 2
 nombre :: FS -> Nombre
-nombre = undefined
+nombre = \fs -> case fs of { A (n, e) -> n ++ "." ++ show e;
+                             C nom fss ->  nom
+						   }
 ----
 -- 3
-contenido :: FS-> [Nombre]
-contenido = undefined
+
+contenido :: FS -> [Nombre]
+contenido = \fs -> case fs of { A (n, e) -> error "no es carpeta";
+	                            C n fss -> case fss of {				-- C n [fss] seria el FS tipo carpeta a 'recorrer'
+									                    [] -> [];		--caso para una carpeta vacia
+														x:xs -> [nombre x] ++ contenido (C "" xs)		--caso con un elemento x (de tipo FS) y concatenacion con un nuevo FS simulado con el resto de elementos
+														}
+                              }
+
 ----
 -- 4
 cantA :: FS -> Int 
