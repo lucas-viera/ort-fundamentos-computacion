@@ -1,5 +1,8 @@
 {-#LANGUAGE GADTs #-}
 {-# OPTIONS_GHC -fno-warn-tabs #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Redundant lambda" #-}
+{-# HLINT ignore "Use lambda-case" #-}
 
 module FS where 
 
@@ -82,15 +85,12 @@ pertenece = \nom fs -> case fs of { A (n,e) -> n==nom ;
 -- 6
 valido :: FS-> Bool
 valido = undefined
--- valido = \fs -> case fs of { A (n,e) -> True;								--caso con un solo archivo
--- 	                         C n fss -> case fss of {[] -> True; 			--caso carpeta vacia"
--- 							                          x:xs -> case x of { A (n2,e2) -> not(n2 == nombre x)  && valido (C "" xs);
--- 													                      C n2 fss2 -> error"carpeta abajo"}}} 
-																		  
-																		  
-																		  
-																		  
-																	  
+-- valido = \fs -> case fs of { A (n,e) -> True;
+--                              C n fss -> case fss of { [] -> True;
+-- 							 		                 x:xs -> case x of {A (n2,e2) -> nombre(x)==nombre(fs) && and(map valido xs) ;
+-- 													 					C n2 fss2 -> n2==n && and(map valido xs) && and(map valido fss2) }}} 
+-- 																						-- n era nombre(x)
+																				  
 ----
 -- 7
 archivosExt :: Ext -> FS -> [Nombre]
@@ -104,20 +104,26 @@ archivosExt = \ext fs -> case fs of { A (n,e) -> case e==ext of {True -> [n];
 ----
 -- 8
 cambiarNom :: Nombre -> Nombre -> FS -> FS 
-cambiarNom = undefined		
+cambiarNom = undefined
+-- cambiarNom = \nom1 nom2 fs -> case fs of {A (n,e) -> case n==nom1 of { True -> A (nom2,e);
+--                                                                        False -> A (n,e) };
+-- 	                                      C n fss -> case n==nom1 of { True -> C nom2 fss;
+--  										                               False -> case fss of { [] -> C n fss;
+-- 																	                           x:xs -> C nom2 (map(cambiarNom nom1 nom2)(xs))}}}
 ----
 -- 9
 nivelesC :: FS -> Int
 nivelesC = \fs -> case fs of { A (n,e) -> 0;
-							   C n fss -> case fss of { [] -> 1 ;	-- de aca en adelante
+							   C n fss -> case fss of { [] -> 1 ;
 							                            x:xs -> 1+ maximum(map nivelesC fss) }}
 
 ----
 -- 10
 borrar :: Nombre -> FS -> FS 
-borrar = \nom fs -> case fs of { A (n,e) -> fs;	--segun letra, se devuelve el mismo FS recibido
-                                 C n fss -> case n==nom of {True -> error"eliminar carpeta"; 			-- borrar nom (C n fss)
-								                            False -> error"no eliminar carpeta"} }
+borrar = undefined
+-- borrar = \nom fs -> case fs of { A (n,e) -> fs;	--segun letra, se devuelve el mismo FS recibido
+--                                  C n fss -> case n==nom of {True -> error"eliminar carpeta"; 			-- borrar nom (C n fss)
+-- 								                            False -> error"no eliminar carpeta"} }
 ----
 -- 11
 ordenar :: FS-> FS
