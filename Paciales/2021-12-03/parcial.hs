@@ -1,7 +1,7 @@
-data T a b where {  J :: a -> T a b ;
-					K :: b -> T a b ;
-					N :: T a b -> T a b -> T a b ;
-					P :: T a b -> T a b }
+data T a b where {  J :: a -> T a b ;		--Semilla
+					K :: b -> T a b ;		--Semilla
+					N :: T a b -> T a b -> T a b ;	--Generador
+					P :: T a b -> T a b }			--Generador
 
 numH :: T a b -> N
 numH = \t -> case t of {J x -> S 0;
