@@ -48,7 +48,7 @@ csys :: FS
 csys = C "sys" [A ("sys", Txt), C "sys" []]
 
 csysvacio :: FS
-csysvacio = C "sys" [A ("p2", Jar)]
+csysvacio = C "sys" []
 
 craiz :: FS
 craiz = C "raiz" [cmusica, A ("notas", Txt), cort, csys]
@@ -81,25 +81,26 @@ pertenece = \nom fs -> case fs of { A (n,e) -> n==nom ;
 ----
 -- 6
 valido :: FS-> Bool
-valido = \fs -> case fs of { A (n,e) -> True;								--caso con un solo archivo
-	                         C n fss -> case fss of {[] -> True; 			--caso carpeta vacia"
-							                          x:xs -> case x of { A (n2,e2) -> not(n2 == nombre x)  && valido (C "" xs);
-													                      C n2 fss2 -> valido (C "" xs)}}}  --not(n2 == nombre x) && 
+valido = undefined
+-- valido = \fs -> case fs of { A (n,e) -> True;								--caso con un solo archivo
+-- 	                         C n fss -> case fss of {[] -> True; 			--caso carpeta vacia"
+-- 							                          x:xs -> case x of { A (n2,e2) -> not(n2 == nombre x)  && valido (C "" xs);
+-- 													                      C n2 fss2 -> error"carpeta abajo"}}} 
 																		  
 																		  
 																		  
 																		  
-																		  
+																	  
 ----
 -- 7
 archivosExt :: Ext -> FS -> [Nombre]
-archivosExt = undefined
--- archivosExt = \ext fs -> case fs of { A (n, e) -> case e==ext of {True -> [n];
--- 																  False -> [] };
---                                       C n fss -> case fss of { [] -> [];
--- 									                           x:xs -> case x of {A (n2, e2) -> case e2 == ext of {True -> n2 : archivosExt ext (C "" xs);
--- 															                                                       False -> archivosExt ext (C "" xs) }
--- 																				  C n3 e3 -> archivosExt}}}
+archivosExt = \ext fs -> case fs of { A (n,e) -> case e==ext of {True -> [n];
+															     False -> []};
+									  C n fss -> case fss of {[] -> [];
+									                          x:xs -> case x of {A (n2,e2) -> case e2==ext of {True -> [n2] ++ archivosExt ext (C "" xs);
+															  												   False -> archivosExt ext (C "" xs)};
+																				 C n2 fss2 -> archivosExt ext (C "" fss2) ++ archivosExt ext (C "" xs) }}}
+
 ----
 -- 8
 cambiarNom :: Nombre -> Nombre -> FS -> FS 
@@ -107,11 +108,16 @@ cambiarNom = undefined
 ----
 -- 9
 nivelesC :: FS -> Int
-nivelesC = undefined	
+nivelesC = \fs -> case fs of { A (n,e) -> 0;
+							   C n fss -> case fss of { [] -> 1 ;	-- de aca en adelante
+							                            x:xs -> 1+ maximum(map nivelesC fss) }}
+
 ----
 -- 10
 borrar :: Nombre -> FS -> FS 
-borrar = undefined
+borrar = \nom fs -> case fs of { A (n,e) -> fs;	--segun letra, se devuelve el mismo FS recibido
+                                 C n fss -> case n==nom of {True -> error"eliminar carpeta"; 			-- borrar nom (C n fss)
+								                            False -> error"no eliminar carpeta"} }
 ----
 -- 11
 ordenar :: FS-> FS
