@@ -1,0 +1,60 @@
+--1/7/2021
+-- 1-a
+alternados :: (N -> Bool) -> N -> Bool
+alternados = \p n -> case n of {
+                O -> p O;
+                S x -> case p (S x)==p x of {
+                        False -> (alternados p x);
+                        True -> False
+                        }
+                }
+-- 1-b		
+incluida :: Eq a => [a] -> [a] -> Bool
+incluida= \l1 l2 -> case l1 of {
+                        [] -> True;
+                        x:xs -> elem x l2 && incluida xs l2
+						}
+-- 1-c				
+sublista :: Eq a => [a] -> [a] -> Bool
+sublista = \l1 l2 -> case l1 of {
+                        [] -> True;
+                        x:xs -> case l2 of {
+                                    [] -> False;
+                                    z:zs -> case x == z of {
+                                        False -> sublista l1 zs;
+                                        True -> sublista xs zs
+                                        }
+                                    }
+                        }
+--2-a
+fun :: N -> N -> [Bool] -> N
+
+
+-- 2/7/2021
+-- 1-a
+iguales :: (N -> Bool) -> N -> Bool
+iguales = \p n -> case n of {
+                O -> p O;
+                S x -> case p (S x) == p x of {
+                        False -> False;
+                        True -> iguales p x;
+                        }
+                }
+-- 1-b
+distintos :: Eq a => [a] -> Bool
+distintos = \l  -> case l of {
+                    [] -> True;
+                    x:xs -> case elem x xs of {
+                            False -> distintos xs;
+                            True -> False
+                            }
+                    }
+-- 1-c
+interseccion :: Eq a => [a] -> [a] -> [a]
+interseccion = \l1 l2 -> case l1 of {
+                        [] -> [];
+                        x:xs -> case elem x l2 of {
+                                False -> interseccion xs l2;
+                                True -> x:(interseccion xs l2)
+                                }
+                        }
